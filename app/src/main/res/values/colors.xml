@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#7EC8E3</color>
+    <color name="snake_green">#3FAF6C</color>
+    <color name="snake_leaf">#6FCF97</color>
+    <color name="fruit_red">#E85D4C</color>
+</resources>
