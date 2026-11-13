@@ -1,5 +1,7 @@
-package com.snakegame.kids.ui.navigation
+﻿package com.apnitechlab.easysnake.ui.navigation
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -7,27 +9,38 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.snakegame.kids.game.GameStatus
-import com.snakegame.kids.game.GameViewModel
-import com.snakegame.kids.ui.screens.GameOverScreen
-import com.snakegame.kids.ui.screens.GameScreen
-import com.snakegame.kids.ui.screens.HomeScreen
-import com.snakegame.kids.ui.screens.SettingsScreen
+import com.apnitechlab.easysnake.ads.InterstitialAdManager
+import com.apnitechlab.easysnake.game.GameStatus
+import com.apnitechlab.easysnake.game.GameViewModel
+import com.apnitechlab.easysnake.ui.screens.AchievementsScreen
+import com.apnitechlab.easysnake.ui.screens.GameOverScreen
+import com.apnitechlab.easysnake.ui.screens.GameScreen
+import com.apnitechlab.easysnake.ui.screens.HomeScreen
+import com.apnitechlab.easysnake.ui.screens.SettingsScreen
 
 @Composable
-fun KidsSnakeNavHost(
+fun EasySnakeNavHost(
     navController: NavHostController,
-    viewModel: GameViewModel
+    viewModel: GameViewModel,
+    interstitialAds: InterstitialAdManager
 ) {
     val gameState by viewModel.gameState.collectAsStateWithLifecycle()
     val settings by viewModel.settings.collectAsStateWithLifecycle()
+    val newlyUnlocked by viewModel.newlyUnlocked.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        interstitialAds.load()
+    }
 
     LaunchedEffect(gameState.status) {
-        if (gameState.status == GameStatus.GameOver) {
+        val ended = gameState.status == GameStatus.GameOver || gameState.status == GameStatus.Won
+        if (ended) {
             val current = navController.currentDestination?.route
             if (current == Routes.Game) {
-                navController.navigate(Routes.GameOver) {
-                    popUpTo(Routes.Game) { inclusive = true }
+                interstitialAds.show {
+                    navController.navigate(Routes.GameOver) {
+                        popUpTo(Routes.Game) { inclusive = true }
+                    }
                 }
             }
         }
@@ -35,22 +48,32 @@ fun KidsSnakeNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Home
+        startDestination = Routes.Home,
+        enterTransition = { fadeIn() },
+        exitTransition = { fadeOut() },
+        popEnterTransition = { fadeIn() },
+        popExitTransition = { fadeOut() }
     ) {
         composable(Routes.Home) {
             HomeScreen(
                 highScore = settings.highScore,
+                stickerCount = settings.unlockedStickers.size,
+                skin = settings.selectedSkin,
                 onPlay = {
                     viewModel.prepareNewGame()
                     navController.navigate(Routes.Game)
                 },
-                onSettings = { navController.navigate(Routes.Settings) }
+                onSettings = { navController.navigate(Routes.Settings) },
+                onAchievements = { navController.navigate(Routes.Achievements) }
             )
         }
 
         composable(Routes.Game) {
             GameScreen(
                 state = gameState,
+                skin = settings.selectedSkin,
+                hapticsEnabled = settings.hapticsEnabled,
+                feedback = viewModel.feedback,
                 onDirection = viewModel::onDirection,
                 onPause = viewModel::pause,
                 onResume = viewModel::startOrResume,
@@ -68,13 +91,17 @@ fun KidsSnakeNavHost(
             GameOverScreen(
                 score = gameState.score,
                 highScore = settings.highScore,
+                won = gameState.status == GameStatus.Won,
+                newlyUnlocked = newlyUnlocked,
                 onPlayAgain = {
+                    viewModel.clearNewlyUnlocked()
                     viewModel.prepareNewGame()
                     navController.navigate(Routes.Game) {
                         popUpTo(Routes.Home)
                     }
                 },
                 onHome = {
+                    viewModel.clearNewlyUnlocked()
                     viewModel.prepareNewGame()
                     navController.navigate(Routes.Home) {
                         popUpTo(Routes.Home) { inclusive = true }
@@ -89,7 +116,16 @@ fun KidsSnakeNavHost(
                 onBack = { navController.popBackStack() },
                 onDifficulty = viewModel::setDifficulty,
                 onSound = viewModel::setSoundEnabled,
-                onWrapWalls = viewModel::setWrapWalls
+                onHaptics = viewModel::setHapticsEnabled,
+                onWrapWalls = viewModel::setWrapWalls,
+                onSelectSkin = viewModel::setSelectedSkin
+            )
+        }
+
+        composable(Routes.Achievements) {
+            AchievementsScreen(
+                unlockedStickers = settings.unlockedStickers,
+                onBack = { navController.popBackStack() }
             )
         }
     }

@@ -1,4 +1,4 @@
-package com.snakegame.kids.ui.components
+﻿package com.apnitechlab.easysnake.ui.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -18,24 +18,36 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import com.snakegame.kids.game.Direction
-import com.snakegame.kids.game.GameState
-import com.snakegame.kids.ui.theme.BoardGrass
-import com.snakegame.kids.ui.theme.BoardLine
-import com.snakegame.kids.ui.theme.DeepLeaf
-import com.snakegame.kids.ui.theme.FruitCoral
-import com.snakegame.kids.ui.theme.LeafGreen
-import com.snakegame.kids.ui.theme.MintGreen
+import com.apnitechlab.easysnake.game.ActivePowerUp
+import com.apnitechlab.easysnake.game.Direction
+import com.apnitechlab.easysnake.game.FoodType
+import com.apnitechlab.easysnake.game.GameState
+import com.apnitechlab.easysnake.game.SnakeSkin
+import com.apnitechlab.easysnake.ui.theme.BoardGrass
+import com.apnitechlab.easysnake.ui.theme.BoardLine
+import com.apnitechlab.easysnake.ui.theme.FruitCoral
+import com.apnitechlab.easysnake.ui.theme.LeafGreen
+import com.apnitechlab.easysnake.ui.theme.SunnyYellow
 import kotlin.math.abs
 
 @Composable
 fun SnakeBoard(
     state: GameState,
+    skin: SnakeSkin,
     onSwipe: (Direction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var totalDx by remember { mutableFloatStateOf(0f) }
     var totalDy by remember { mutableFloatStateOf(0f) }
+
+    val foodColor = when (state.foodType) {
+        FoodType.NORMAL -> FruitCoral
+        FoodType.GOLD -> SunnyYellow
+        FoodType.SLOW -> Color(0xFF5B9BD5)
+        FoodType.STAR -> Color(0xFFB57EDC)
+    }
+
+    val ghost = state.activePowerUp == ActivePowerUp.GHOST && state.powerUpTicksRemaining > 0
 
     Canvas(
         modifier = modifier
@@ -102,20 +114,29 @@ fun SnakeBoard(
         val food = state.food
         val foodPad = cellW * 0.18f
         drawRoundRect(
-            color = FruitCoral,
+            color = foodColor,
             topLeft = Offset(food.x * cellW + foodPad, food.y * cellH + foodPad),
             size = Size(cellW - foodPad * 2, cellH - foodPad * 2),
             cornerRadius = CornerRadius(cellW * 0.35f, cellH * 0.35f)
         )
-        drawCircle(
-            color = LeafGreen,
-            radius = cellW * 0.08f,
-            center = Offset(food.x * cellW + cellW * 0.55f, food.y * cellH + foodPad)
-        )
+        if (state.foodType == FoodType.STAR) {
+            drawCircle(
+                color = Color.White.copy(alpha = 0.85f),
+                radius = cellW * 0.12f,
+                center = Offset(food.x * cellW + cellW * 0.5f, food.y * cellH + cellH * 0.5f)
+            )
+        } else {
+            drawCircle(
+                color = LeafGreen,
+                radius = cellW * 0.08f,
+                center = Offset(food.x * cellW + cellW * 0.55f, food.y * cellH + foodPad)
+            )
+        }
 
         state.snake.forEachIndexed { index, point ->
             val pad = if (index == 0) cellW * 0.08f else cellW * 0.14f
-            val color = if (index == 0) DeepLeaf else if (index % 2 == 0) LeafGreen else MintGreen
+            val base = if (index == 0) skin.head else if (index % 2 == 0) skin.bodyA else skin.bodyB
+            val color = if (ghost) base.copy(alpha = 0.55f) else base
             drawRoundRect(
                 color = color,
                 topLeft = Offset(point.x * cellW + pad, point.y * cellH + pad),

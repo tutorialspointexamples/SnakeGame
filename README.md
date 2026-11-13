@@ -1,4 +1,4 @@
-# Kids Snake
+# EasySnake
 
 A kid-friendly Snake game for Android, built with **Kotlin** and **Jetpack Compose**.
 
@@ -6,7 +6,11 @@ A kid-friendly Snake game for Android, built with **Kotlin** and **Jetpack Compo
 
 - Bright playground-style UI (portrait)
 - On-screen D-pad **and** swipe controls
-- Easy / Medium / Hard speeds (default Easy)
+- Easy / Medium / Hard speeds (default Easy) with progressive speed-up in a run
+- Special fruit power-ups (gold / slow / ghost star)
+- Fill-the-board win celebration
+- Sticker achievements + unlockable snake skins
+- Haptics + score pulse polish
 - Wrap-around walls (optional classic solid walls)
 - Sound effects toggle
 - Local high score (DataStore)
@@ -36,7 +40,25 @@ Debug APK output:
 
 `app/build/outputs/apk/debug/app-debug.apk`
 
+## Ads (AdMob)
+
+The app shows:
+- A **banner** on Home and Game Over
+- An **interstitial** when a game ends
+
+Debug builds use [Google's sample AdMob IDs](https://developers.google.com/admob/android/test-ads).
+
+Before releasing, create an app + ad units at [AdMob](https://apps.admob.com) and put your IDs in `app/build.gradle.kts`:
+
+1. `manifestPlaceholders["adMobAppId"]` — App ID (`ca-app-pub-xxxx~yyyy`)
+2. `ADMOB_BANNER_ID` — Banner unit (`ca-app-pub-xxxx/zzzz`)
+3. `ADMOB_INTERSTITIAL_ID` — Interstitial unit (`ca-app-pub-xxxx/zzzz`)
+
+AdSense `ca-pub-…` / AMP `amp-ad` slots are for websites and will not work here.
+
+Child-directed / G-rated request settings are enabled in `MainActivity` for this kids game.
+
 ## Package
 
-- Application ID: `com.snakegame.kids`
+- Application ID: `com.apnitechlab.easysnake`
 - Min SDK 26 / Target SDK 34

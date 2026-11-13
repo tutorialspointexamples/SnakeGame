@@ -1,4 +1,4 @@
-package com.snakegame.kids.ui.theme
+﻿package com.apnitechlab.easysnake.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
@@ -80,7 +80,7 @@ val PlaygroundGradient = Brush.verticalGradient(
 )
 
 @Composable
-fun KidsSnakeTheme(content: @Composable () -> Unit) {
+fun EasySnakeTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = KidsColorScheme,
         typography = KidsTypography,

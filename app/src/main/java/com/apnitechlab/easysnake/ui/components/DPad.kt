@@ -1,4 +1,4 @@
-package com.snakegame.kids.ui.components
+﻿package com.apnitechlab.easysnake.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,9 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.snakegame.kids.game.Direction
-import com.snakegame.kids.ui.theme.LeafGreen
-import com.snakegame.kids.ui.theme.SunnyYellow
+import com.apnitechlab.easysnake.game.Direction
+import com.apnitechlab.easysnake.ui.theme.LeafGreen
+import com.apnitechlab.easysnake.ui.theme.SunnyYellow
 
 @Composable
 fun DPad(

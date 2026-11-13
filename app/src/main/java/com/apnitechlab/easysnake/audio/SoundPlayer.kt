@@ -1,4 +1,4 @@
-package com.snakegame.kids.audio
+﻿package com.apnitechlab.easysnake.audio
 
 import android.content.Context
 import android.media.AudioManager

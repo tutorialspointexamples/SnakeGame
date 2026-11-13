@@ -1,7 +1,10 @@
-package com.snakegame.kids.ui.screens
+﻿package com.apnitechlab.easysnake.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +12,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,15 +33,17 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.snakegame.kids.data.UserSettings
-import com.snakegame.kids.game.Difficulty
-import com.snakegame.kids.ui.theme.LeafGreen
-import com.snakegame.kids.ui.theme.PlaygroundGradient
-import com.snakegame.kids.ui.theme.SoftCream
-import com.snakegame.kids.ui.theme.SunnyYellow
-import com.snakegame.kids.ui.theme.TextInk
+import com.apnitechlab.easysnake.data.UserSettings
+import com.apnitechlab.easysnake.game.Difficulty
+import com.apnitechlab.easysnake.game.SnakeSkin
+import com.apnitechlab.easysnake.ui.theme.LeafGreen
+import com.apnitechlab.easysnake.ui.theme.PlaygroundGradient
+import com.apnitechlab.easysnake.ui.theme.SoftCream
+import com.apnitechlab.easysnake.ui.theme.SunnyYellow
+import com.apnitechlab.easysnake.ui.theme.TextInk
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +52,9 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onDifficulty: (Difficulty) -> Unit,
     onSound: (Boolean) -> Unit,
-    onWrapWalls: (Boolean) -> Unit
+    onHaptics: (Boolean) -> Unit,
+    onWrapWalls: (Boolean) -> Unit,
+    onSelectSkin: (SnakeSkin) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -67,6 +78,7 @@ fun SettingsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
@@ -89,11 +101,68 @@ fun SettingsScreen(
                 }
             }
 
-            SettingsCard(title = "Sound") {
+            SettingsCard(title = "Snake skin") {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    SnakeSkin.entries.forEach { skin ->
+                        val unlocked = skin.isUnlocked(settings.unlockedStickers)
+                        val selected = settings.selectedSkin == skin
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Box(
+                                modifier = Modifier
+                                    .size(52.dp)
+                                    .clip(CircleShape)
+                                    .background(skin.bodyA)
+                                    .then(
+                                        if (selected) {
+                                            Modifier.border(3.dp, LeafGreen, CircleShape)
+                                        } else {
+                                            Modifier
+                                        }
+                                    )
+                                    .clickable(enabled = unlocked) { onSelectSkin(skin) },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(22.dp)
+                                        .clip(CircleShape)
+                                        .background(skin.head)
+                                )
+                                if (!unlocked) {
+                                    Text("🔒", style = MaterialTheme.typography.labelLarge)
+                                }
+                            }
+                            Spacer(Modifier.height(6.dp))
+                            Text(
+                                text = skin.label,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = if (unlocked) TextInk else TextInk.copy(alpha = 0.45f)
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Unlock Sunny at score 10, Berry at score 25.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = TextInk.copy(alpha = 0.75f)
+                )
+            }
+
+            SettingsCard(title = "Feedback") {
                 SettingSwitchRow(
                     label = "Sound effects",
                     checked = settings.soundEnabled,
                     onCheckedChange = onSound
+                )
+                Spacer(Modifier.height(8.dp))
+                SettingSwitchRow(
+                    label = "Haptics",
+                    checked = settings.hapticsEnabled,
+                    onCheckedChange = onHaptics
                 )
             }
 
