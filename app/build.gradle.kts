@@ -4,43 +4,63 @@ plugins {
 }
 
 android {
-    namespace = "com.apnitechlab.easysnake"
+    namespace = "com.w3stech.easysnake"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.apnitechlab.easysnake"
+        applicationId = "com.w3stech.easysnake"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
-        // Google sample AdMob IDs (safe for testing).
-        // Replace in the release block with your real IDs from apps.admob.com before shipping.
-        // Note: AdSense ca-pub / AMP ad slots are NOT AdMob IDs.
-        manifestPlaceholders["adMobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+        // AdMob App ID + separate banner / interstitial pools.
+        // Banners rotate every 45s; interstitials preload a random unit for after game end.
+        // Host app-ads.txt at your Play Console website root (see repo app-ads.txt).
+        manifestPlaceholders["adMobAppId"] = "ca-app-pub-5172543149836113~9265123564"
         buildConfigField(
-            "String",
-            "ADMOB_BANNER_ID",
-            "\"ca-app-pub-3940256099942544/6300978111\""
+            "String[]",
+            "ADMOB_BANNER_IDS",
+            "{" +
+                "\"ca-app-pub-5172543149836113/2088186170\"," +
+                "\"ca-app-pub-5172543149836113/2037195229\"," +
+                "\"ca-app-pub-5172543149836113/2172926590\"," +
+                "\"ca-app-pub-5172543149836113/5069572738\"," +
+                "\"ca-app-pub-5172543149836113/4942735172\"," +
+                "\"ca-app-pub-5172543149836113/5265013857\"," +
+                "\"ca-app-pub-5172543149836113/7312592690\"," +
+                "\"ca-app-pub-5172543149836113/1598211527\"," +
+                "\"ca-app-pub-5172543149836113/7297260761\"," +
+                "\"ca-app-pub-5172543149836113/1326748788\"" +
+                "}"
         )
         buildConfigField(
-            "String",
-            "ADMOB_INTERSTITIAL_ID",
-            "\"ca-app-pub-3940256099942544/1033173712\""
+            "String[]",
+            "ADMOB_INTERSTITIAL_IDS",
+            "{" +
+                "\"ca-app-pub-5172543149836113/6986269571\"," +
+                "\"ca-app-pub-5172543149836113/2855452875\"," +
+                "\"ca-app-pub-5172543149836113/1269928525\"," +
+                "\"ca-app-pub-5172543149836113/4831054535\"," +
+                "\"ca-app-pub-5172543149836113/8294501878\"," +
+                "\"ca-app-pub-5172543149836113/1953434746\"," +
+                "\"ca-app-pub-5172543149836113/3588970109\"," +
+                "\"ca-app-pub-5172543149836113/3054938438\"," +
+                "\"ca-app-pub-5172543149836113/1509601673\"," +
+                "\"ca-app-pub-5172543149836113/2631111650\"" +
+                "}"
         )
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            // Debug keystore until a Play upload keystore is configured.
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // TODO: replace with your AdMob App ID + ad unit IDs before Play Store release
-            // manifestPlaceholders["adMobAppId"] = "ca-app-pub-xxxxxxxx~yyyyyyyyyy"
-            // buildConfigField("String", "ADMOB_BANNER_ID", "\"ca-app-pub-xxxxxxxx/yyyyyyyyyy\"")
-            // buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-xxxxxxxx/yyyyyyyyyy\"")
         }
     }
 
