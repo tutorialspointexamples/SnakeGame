@@ -106,10 +106,10 @@ Host that file at the root of the website listed in your Play Console developer 
 - Min SDK 26 / Target SDK 36
 - Version 1.1 (versionCode 2)
 
-## Privacy & Terms (GitHub Pages)
+## Privacy & Terms (public)
 
-After Pages is enabled for this repo (`Settings → Pages → Deploy from branch main /docs`):
+Hosted on a separate **public** GitHub Pages site (this app repo can stay private):
 
-- Privacy Policy: https://tutorialspointexamples.github.io/SnakeGame/privacy.html
-- Terms of Service: https://tutorialspointexamples.github.io/SnakeGame/terms.html
-- Legal index: https://tutorialspointexamples.github.io/SnakeGame/
+- Privacy Policy: https://tutorialspointexamples.github.io/SnakeGame-legal/privacy.html
+- Terms of Service: https://tutorialspointexamples.github.io/SnakeGame-legal/terms.html
+- Legal index: https://tutorialspointexamples.github.io/SnakeGame-legal/
