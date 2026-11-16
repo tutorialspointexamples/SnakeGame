@@ -1,18 +1,37 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
 
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.inputStream().use { keystoreProperties.load(it) }
+}
+
 android {
     namespace = "com.w3stech.easysnake"
-    compileSdk = 34
+    compileSdk = 36
+
+    signingConfigs {
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
+                storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+            }
+        }
+    }
 
     defaultConfig {
         applicationId = "com.w3stech.easysnake"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 2
+        versionName = "1.1"
 
         // AdMob App ID + separate banner / interstitial pools.
         // Banners rotate every 45s; interstitials preload a random unit for after game end.
@@ -55,8 +74,15 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            // Debug keystore until a Play upload keystore is configured.
-            signingConfig = signingConfigs.getByName("debug")
+            ndk {
+                // Embed native debug symbols in the AAB for Play Console crash analysis.
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
+            signingConfig = if (keystorePropertiesFile.exists()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

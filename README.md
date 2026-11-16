@@ -103,4 +103,5 @@ Host that file at the root of the website listed in your Play Console developer 
 ## Package
 
 - Application ID: `com.w3stech.easysnake`
-- Min SDK 26 / Target SDK 34
+- Min SDK 26 / Target SDK 36
+- Version 1.1 (versionCode 2)
