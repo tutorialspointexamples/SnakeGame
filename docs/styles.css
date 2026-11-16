@@ -1,0 +1,110 @@
+:root {
+  --ink: #17362c;
+  --muted: #4a6358;
+  --bg1: #7ed6ef;
+  --bg2: #b8f0d8;
+  --bg3: #f7f1e6;
+  --card: rgba(255, 255, 255, 0.88);
+  --accent: #0e6b5c;
+  --line: rgba(23, 54, 44, 0.12);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", "Nunito", system-ui, sans-serif;
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--bg1), var(--bg2), var(--bg3));
+  line-height: 1.65;
+}
+
+.wrap {
+  width: min(720px, calc(100% - 2rem));
+  margin: 2.5rem auto 4rem;
+  padding: 1.75rem 1.5rem 2rem;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 24px;
+  box-shadow: 0 12px 40px rgba(14, 107, 92, 0.12);
+}
+
+.brand {
+  margin: 0 0 0.35rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  line-height: 1.2;
+}
+
+h2 {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.lead, p, li {
+  color: var(--muted);
+}
+
+.lead { margin-top: 0; }
+
+ul { padding-left: 1.2rem; }
+li { margin: 0.35rem 0; }
+
+.links {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.links a, .nav a, a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.links a {
+  display: block;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: rgba(14, 107, 92, 0.08);
+  border: 1px solid var(--line);
+}
+
+.links a:hover, .nav a:hover, a:hover {
+  text-decoration: underline;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.95rem;
+}
+
+.meta {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+code {
+  font-size: 0.9em;
+  background: rgba(14, 107, 92, 0.08);
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+}

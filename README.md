@@ -105,3 +105,11 @@ Host that file at the root of the website listed in your Play Console developer 
 - Application ID: `com.w3stech.easysnake`
 - Min SDK 26 / Target SDK 36
 - Version 1.1 (versionCode 2)
+
+## Privacy & Terms (GitHub Pages)
+
+After Pages is enabled for this repo (`Settings → Pages → Deploy from branch main /docs`):
+
+- Privacy Policy: https://tutorialspointexamples.github.io/SnakeGame/privacy.html
+- Terms of Service: https://tutorialspointexamples.github.io/SnakeGame/terms.html
+- Legal index: https://tutorialspointexamples.github.io/SnakeGame/
